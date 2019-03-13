@@ -12,7 +12,7 @@ class Window(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle('Table Gym Environment')
+        self.setWindowTitle('Table Environment')
 
         # Image label to display the rendering
         self.imgLabel = QLabel()
@@ -78,7 +78,7 @@ class Window(QMainWindow):
         elif e.key() == Qt.Key_Escape:
             keyName = 'escape'
 
-        if keyName == None
+        if keyName == None:
             return
 
         self.keyDownCb(keyName)
@@ -98,6 +98,17 @@ class Renderer:
             self.app = QApplication([])
             self.window = Window()
 
+    def beginFrame(self):
+        self.painter.begin(self.img)
+        self.painter.setRenderHint(QPainter.Antialiasing, False)
+
+        # Clear the background
+        self.painter.setBrush(QColor(0, 0, 0))
+        self.painter.drawRect(0, 0, self.width - 1, self.height - 1)
+
 
 if __name__ == "__main__":
     r = Renderer(128, 128, True)
+    r.beginFrame()
+    r.app.exec_()
+    r.window.setText("Hello")
