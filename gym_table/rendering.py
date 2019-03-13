@@ -4,6 +4,7 @@ from PyQt5.QtGui import QImage, QPixmap, QPainter, QColor, QPolygon
 from PyQt5.QtCore import QPoint, QSize, QRect
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QTextEdit
 from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QLabel, QFrame
+import sys
 
 class Window(QMainWindow):
     """
@@ -17,7 +18,6 @@ class Window(QMainWindow):
         # Image label to display the rendering
         self.imgLabel = QLabel()
         self.imgLabel.setFrameStyle(QFrame.Panel | QFrame.Sunken)
-
 
         # Text box for the mission
         self.missionBox = QTextEdit()
@@ -46,46 +46,39 @@ class Window(QMainWindow):
 
         self.closed = False
 
-        # Callback for keyboard events
-        self.keyDownCb = None
+        # Stores keyboard input
+        self.keyName = None
 
     def closeEvent(self, event):
         """Close an event"""
         self.closed = True
-
-    def setKeyDownCb(self, callback):
-        """Read keyboard input"""
-        self.keyDownCb = callback
 
     def setText(self, text):
         """ Enter the mission text"""
         self.missionBox.setPlainText(text)
 
     def keyPressEvent(self, e):
-        if self.keyDownCb == None:
-            return
-
+        """Get keyboard inputs"""
         # Keyboard inputs
-        keyName = None
+        self.keyName = None
         if e.key() == Qt.Key_Left:
-            keyName = 'left'
+            self.keyName = 'left'
         elif e.key() == Qt.Key_Right:
-            keyname = 'right'
+            self.keyName = 'right'
         elif e.key() == Qt.Key_Up:
-            keyName = 'up'
+            self.keyName = 'up'
         elif e.key() == Qt.Key_Down:
-            keyName = 'down'
+            self.keyName = 'down'
         elif e.key() == Qt.Key_Escape:
-            keyName = 'escape'
-
-        if keyName == None:
+            self.keyName = 'escape'
+            sys.exit(0)
+        if self.keyName == None:
+            print("Unrecognized key input")
             return
-
-        self.keyDownCb(keyName)
 
 
 class Renderer:
-    def __init__(self, width, height, ownWindow=False):
+    def __init__(self, width=128, height=128, ownWindow=True):
         self.width = width
         self.height = height
 
@@ -95,8 +88,9 @@ class Renderer:
 
         self.window = None
         if ownWindow:
-            self.app = QApplication([])
+            self.app = QApplication(sys.argv)
             self.window = Window()
+        #sys.exit(self.app.exec_())
 
     def beginFrame(self):
         self.painter.begin(self.img)
@@ -106,9 +100,53 @@ class Renderer:
         self.painter.setBrush(QColor(0, 0, 0))
         self.painter.drawRect(0, 0, self.width - 1, self.height - 1)
 
+    def push(self):
+        self.painter.save()
+
+    def pop(self):
+        self.painter.restore()
+
+    def rotate(self, degrees):
+        self.painter.rotate(degrees)
+
+    def translate(self, x, y):
+        self.painter.translate(x, y)
+
+    def scale(self, x, y):
+        self.painter.scale(x, y)
+
+    def setLineColor(self, r, g, b, a=255):
+        self.painter.setPen(QColor(r, g, b, a))
+
+    def setColor(self, r, g, b, a=255):
+        self.painter.setBrush(QColor(r, g, b, a))
+
+    def setLineWidth(self, width):
+        pen = self.painter.pen()
+        pen.setWidthF(width)
+        self.painter.setPen(pen)
+
+    def drawLine(self, x0, y0, x1, y1):
+        self.painter.drawLine(x0, y0, x1, y1)
+
+    def drawCircle(self, x, y, r):
+        center = QPoint(x, y)
+        self.painter.drawEllipse(center, r, r)
+
+    def drawPolygon(self, points):
+        """Takes a list of points (tuples) as input"""
+        points = map(lambda p: QPoint(p[0], p[1]), points)
+        self.painter.drawPolygon(QPolygon(points))
+
+    def drawPolyline(self, points):
+        """Takes a list of points (tuples) as input"""
+        points = map(lambda p: QPoint(p[0], p[1]), points)
+        self.painter.drawPolyline(QPolygon(points))
+
+    def fillRect(self, x, y, width, height, r, g, b, a=255):
+        self.painter.fillRect(QRect(x, y, width, height), QColor(r, g, b, a))
 
 if __name__ == "__main__":
-    r = Renderer(128, 128, True)
-    r.beginFrame()
-    r.app.exec_()
-    r.window.setText("Hello")
+    while True:
+        r = Renderer()
+        print("Hello")
