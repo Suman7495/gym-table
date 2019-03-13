@@ -1,4 +1,4 @@
-
+import gym_table.envs
 from gym.envs.registration import register
 
 register(
