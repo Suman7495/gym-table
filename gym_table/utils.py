@@ -1,3 +1,5 @@
+import numpy as np
+
 # Size in pixels of a cell in the full-scale human view
 CELL_PIXELS = 32
 

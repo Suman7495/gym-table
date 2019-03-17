@@ -1,7 +1,7 @@
 import gym
 from gym import error, spaces, utils
 from gym.utils import seeding
-from utils import *
+from gym_table.utils import *
 
 class TableEnv(gym.Env):
   """

@@ -4,7 +4,7 @@ from enum import IntEnum
 import numpy as np
 from gym import error, spaces, utils
 from gym.utils import seeding
-from utils import *
+from gym_table.utils import *
 
 
 class WorldObj:
