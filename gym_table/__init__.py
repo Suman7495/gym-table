@@ -1,1 +1,2 @@
-from gym_table.envs.emtpy_table import *
+# Import the envs module so that envs register themselves
+import gym_table.envs

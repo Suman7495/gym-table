@@ -1,1 +1,1 @@
-from gym_table.envs.table_env import *
+from gym_table.envs.empty_table import *

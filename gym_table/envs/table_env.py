@@ -636,7 +636,7 @@ class TableEnv(gym.Env):
       return
 
     if self.grid_render is None:
-      from gym_minigrid.rendering import Renderer
+      from gym_table.rendering import Renderer
       self.grid_render = Renderer(
         self.width * CELL_PIXELS,
         self.height * CELL_PIXELS,
