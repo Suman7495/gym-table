@@ -2,6 +2,9 @@ import gym
 from gym import error, spaces, utils
 from gym.utils import seeding
 from gym_table.utils import *
+from enum import IntEnum
+import math
+
 
 class TableEnv(gym.Env):
   """
@@ -46,7 +49,7 @@ class TableEnv(gym.Env):
       height = grid_size
 
     # Action enumeration for this environment
-    self.actions = MiniGridEnv.Actions
+    self.actions = TableEnv.Actions
 
     # Actions are discrete integer values
     self.action_space = spaces.Discrete(len(self.actions))

@@ -1,7 +1,1 @@
-import gym_table.envs
-from gym.envs.registration import register
-
-register(
-    id='table-v0',
-    entry_point='gym_table.envs:TableEnv',
-)
+from gym_table.envs.emtpy_table import *
