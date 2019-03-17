@@ -1,6 +1,6 @@
 from gym_table.utils import *
 from gym_table.register import register
-from gym_table.envs.table_env import *
+from gym_table.envs.basic_grid import *
 from gym_table.grid_objects import *
 
 
